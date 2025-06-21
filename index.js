@@ -1,18 +1,20 @@
 import express from 'express'
-import home from './pages/home.js';
-import login from './pages/login.js';
-import submit from './pages/submit.js';
-
+import path from 'path'
 const app = express();
 
-app.get("/",(req,resp)=>{
-    resp.send(home());
+app.get("/",(res,resp)=>{
+    const absPath= path.resolve('view/home.html')
+    resp.sendFile(absPath)
 })
-app.get("/login",(req,resp)=>{ 
-    resp.send(login());
+app.get("/login",(res,resp)=>{
+    const absPath= path.resolve('view/login.html')
+    resp.sendFile(absPath)
 })
-app.post("/submit",(req,resp)=>{
-    resp.send(submit());
+
+app.get("/about",(res,resp)=>{
+    const absPath= path.resolve('view/about.html')
+    resp.sendFile(absPath)
 })
+
 
 app.listen(3200)
