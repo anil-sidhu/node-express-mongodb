@@ -8,7 +8,7 @@ const app = express();
 app.get("/",(req,resp)=>{
     resp.send(home());
 })
-app.get("/login",(req,resp)=>{
+app.get("/login",(req,resp)=>{ 
     resp.send(login());
 })
 app.post("/submit",(req,resp)=>{
