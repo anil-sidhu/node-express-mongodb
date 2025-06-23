@@ -1,31 +1,22 @@
 import express from 'express'
-import path from 'path'
-
 const app = express();
- const absPath= path.resolve('view')
 
- const publicPath= path.resolve('public')
 
-app.use(express.static(publicPath));
- console.log(publicPath);
- 
-app.get("/",(res,resp)=>{
-   
-    resp.sendFile(absPath+"/home.html")
-})
-app.get("/login",(res,resp)=>{
-
-    resp.sendFile(absPath+"/login.html")
+app.use((req,resp,next)=>{
+    console.log("user is accessing "+req.url +" Page");
+    next(); 
 })
 
-app.get("/about",(res,resp)=>{
-
-    resp.sendFile(absPath+"/about.html")
+app.get("/",(req,resp)=>{
+    resp.send("Home Page")
 })
 
-app.use((req,resp)=>{
-   
-    resp.status(404).sendFile(absPath+"/404.html")
+app.get("/users",(req,resp)=>{
+    resp.send("users Page")
+})
+
+app.get("/products",(req,resp)=>{
+    resp.send("products Page")
 })
 
 app.listen(3200)
