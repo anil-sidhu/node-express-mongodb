@@ -1,31 +1,38 @@
 import express from 'express'
+import path from 'path'
+
 const app = express();
 
 
-function checkAgeRouteMiddleware(req, resp, next) {
-    if (!req.query.age || req.query.age < 18) {
-        resp.send("You are not allowed to used this website")
-    } else {
-        next()
-    }
-}
+app.use(express.urlencoded({extended:false}))
+app.use(express.static('public'))
 
-app.use(checkAgeRouteMiddleware)
-
-app.get('', (req, resp) => {
-    resp.send("<h1>Home Page<h1>")
+app.get("/",(req,resp)=>{
+    const filePath= path.resolve('view/home.html');
+    resp.sendFile(filePath)
 })
 
-app.get('/login', (req, resp) => {
-    resp.send("<h1>Login Page<h1>")
+
+app.get("/login",(req,resp)=>{
+    resp.send(`
+        <form action="/submit" method="post">
+       <input type="text" placeholder="enter email" name="email" />
+        <input type="text" placeholder="enter password" name="password" />
+        <button>Login</button>
+        </form>
+        `)
 })
 
-app.get('/users', checkAgeRouteMiddleware, (req, resp) => {
-    resp.send("<h1>User Page<h1>")
+
+app.post("/submit",(req,resp)=>{
+    console.log("user login details are : ",req.body);
+    
+    resp.send("submit Page")
 })
 
-app.get('/products', checkAgeRouteMiddleware, (req, resp) => {
-    resp.send("<h1>Products Page<h1>")
+
+app.get("/users",(req,resp)=>{
+    resp.send("User Page")
 })
 
 app.listen(3200)
