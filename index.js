@@ -2,35 +2,29 @@ import express from 'express'
 const app = express();
 
 
-function checkAgeRouteMiddleware(req,resp,next){
-    console.log(req.query.age);
-    
-    if(!req.query.age || req.query.age<18 ){
+function checkAgeRouteMiddleware(req, resp, next) {
+    if (!req.query.age || req.query.age < 18) {
         resp.send("You are not allowed to used this website")
-    }else{
+    } else {
         next()
     }
 }
 
-function checkURLRouteMiddleware(req,resp,next){
-    console.log("this request url is ", req.url);
+app.use(checkAgeRouteMiddleware)
 
-   next()
-}
-
-app.get('',(req,resp)=>{
+app.get('', (req, resp) => {
     resp.send("<h1>Home Page<h1>")
 })
 
-app.get('/login',checkURLRouteMiddleware,(req,resp)=>{
+app.get('/login', (req, resp) => {
     resp.send("<h1>Login Page<h1>")
 })
 
-app.get('/users',checkAgeRouteMiddleware,checkURLRouteMiddleware,(req,resp)=>{
+app.get('/users', checkAgeRouteMiddleware, (req, resp) => {
     resp.send("<h1>User Page<h1>")
 })
 
-app.get('/products',checkAgeRouteMiddleware,checkURLRouteMiddleware,(req,resp)=>{
+app.get('/products', checkAgeRouteMiddleware, (req, resp) => {
     resp.send("<h1>Products Page<h1>")
 })
 
