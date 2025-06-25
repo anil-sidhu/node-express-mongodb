@@ -1,38 +1,20 @@
 import express from 'express'
-import path from 'path'
-
+import morgan from 'morgan';
 const app = express();
 
-
-app.use(express.urlencoded({extended:false}))
-app.use(express.static('public'))
-
+app.use(morgan('dev'))
 app.get("/",(req,resp)=>{
-    const filePath= path.resolve('view/home.html');
-    resp.sendFile(filePath)
-})
-
-
-app.get("/login",(req,resp)=>{
-    resp.send(`
-        <form action="/submit" method="post">
-       <input type="text" placeholder="enter email" name="email" />
-        <input type="text" placeholder="enter password" name="password" />
-        <button>Login</button>
-        </form>
-        `)
-})
-
-
-app.post("/submit",(req,resp)=>{
-    console.log("user login details are : ",req.body);
-    
-    resp.send("submit Page")
-})
-
+    resp.send("Home page")
+});
 
 app.get("/users",(req,resp)=>{
-    resp.send("User Page")
+    resp.send("Users page")
+});
+
+app.get("/wait",(req,resp)=>{
+   setTimeout(() => {
+     resp.send("result after 1 second")
+   }, 1000);
 })
 
 app.listen(3200)
