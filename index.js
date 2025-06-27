@@ -2,9 +2,17 @@ import express from 'express'
 const app = express();
 
 
+app.use(express.urlencoded({extended:false}))
 app.set('view engine','ejs')
-app.get("/",(req,resp)=>{
-    resp.render('home',{name:'Anil',ytChannel:'Code Step by step', age:29})
-})
+app.get('/add-user',(req,resp)=>{
+    resp.render('addUser')
+});
+
+
+app.post('/submit-user',(req,resp)=>{
+    console.log(req.body);
+    
+resp.render('SubmitUser',req.body)
+});
 
 app.listen(3200)
