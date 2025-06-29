@@ -1,9 +1,23 @@
 import express from 'express'
-import { handleUsers } from './controller/userController.js';
+
 const app = express();
 
-app.set('view engine','ejs')
-app.get('/users',handleUsers)
+app.get("/",(req,resp)=>{
+    const users=['anil','sam',"peter","sidhu"];
+    let data =`<ul>`;
+    for(let i=0;i<users.length;i++){
+        data+=`<li><a href="user/${users[i]}">${users[i]}</a></li>`
+        console.log(users[i]); 
+    }
+    data+=`</ul>`
+    resp.send(data)
+})
+
+app.get("/user/:name",(req,resp)=>{
+    console.log(req.params.name);
+    const userName=req.params.name;
+    resp.send(`this is ${userName}'s profile page"`)
+})
 
 
-app.listen(3200);
+app.listen(3200)
