@@ -1,28 +1,27 @@
 import express from 'express'
-import userData from './users.json' with {type:'json'}
-const app =express();
+import { MongoClient } from 'mongodb';
 
-app.get("/",(req,resp)=>{
-    console.log(userData);
+const dbName="school"
+const url ="mongodb://localhost:27017"
+
+const client= new MongoClient(url)
+
+async function dbConnection(){
+    await client.connect()
+    const db = client.db(dbName);
+    const collection= db.collection('students')
+
+    const result = await collection.find().toArray()
+    console.log(result);
     
-    resp.send(userData)
-})
+}
 
-app.get("/user/:id",(req,resp)=>{
-    const id = req.params.id
-    console.log(id);
-    let filteredData = userData.filter((user)=>user.id==id)
+dbConnection()
 
-    resp.send(filteredData) 
-})
-
-app.get("/username/:name",(req,resp)=>{
-    const name = req.params.name
-    console.log(name);
-    let filteredData = userData.filter((user)=>user.name.toLowerCase()==name.toLowerCase())
-
-    resp.send(filteredData) 
-})
-
+const app = express();
 app.listen(3200)
+
+
+
+
 
