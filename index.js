@@ -100,6 +100,49 @@ client.connect().then((connection) => {
         })
     })
 
+    app.post("/ui/update/:id", (req, resp) => {
+        console.log(req.body);
+        console.log(req.params.id);
+
+        const collection = db.collection("students");
+        const filter = { _id: new ObjectId(req.params.id) };
+        const update = { $set: req.body }
+        const result = collection.updateOne(filter,update)
+
+        if (result) {
+            resp.send("data updated")
+        } else {
+            resp.send("data not updated")
+        }
+
+    })
+
+
+        app.put("/update/:id", (req, resp) => {
+        console.log(req.body);
+        console.log(req.params.id);
+
+        const collection = db.collection("students");
+        const filter = { _id: new ObjectId(req.params.id) };
+        const update = { $set: req.body }
+        const result = collection.updateOne(filter,update)
+
+        if (result) {
+              resp.send({
+            message: 'data updated',
+            success: true,
+            result: req.body
+        })
+        } else {
+             resp.send({
+            message: 'data not updated',
+            success: false,
+            result: null
+        })
+        }
+
+    })
+
 })
 
 // app.set("view engine",'ejs')
