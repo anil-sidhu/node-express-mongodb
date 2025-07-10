@@ -1,5 +1,5 @@
 import express from 'express'
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
 const dbName="school"
 const url ="mongodb://localhost:27017"
@@ -50,6 +50,34 @@ client.connect().then((connection)=>{
         const collection = db.collection("students");
         const result = await collection.insertOne(req.body)
         resp.send({message:"data stored",success:true,result:result})
+    })
+
+    app.delete("/delete/:id",async (req,resp)=>{
+        console.log(req.params.id);
+        const collection = db.collection("students")
+        const result = await collection.deleteOne({_id: new ObjectId(req.params.id)})
+        if(result){
+            resp.send({
+                message:"student data deleted",
+                success:true
+            })
+        }else{
+            resp.send({
+                message:"student data not deleted, try after sometime",
+                success:false
+            })
+        }
+    })
+
+      app.get("/ui/delete/:id",async (req,resp)=>{
+        console.log(req.params.id);
+        const collection = db.collection("students")
+        const result = await collection.deleteOne({_id: new ObjectId(req.params.id)})
+        if(result){
+            resp.send("<h1>Student record deleted<h1>")
+        }else{
+             resp.send("<h1>Student record  not deleted<h1>")
+        }
     })
 
 })
