@@ -1,6 +1,17 @@
-const user ={userName:"anil",age:20,email:"anil@test.com",city:"noida"}
-// const email=user.email;
-//  const age=user.age;
-//   const name=user.name;
-const {email,userName,age,city="delhi"}=user
-console.log(city);
+import mongoose from 'mongoose'
+async function dbConnection(){
+   await mongoose.connect("mongodb://localhost:27017/school");
+   const schema= mongoose.Schema({
+    name:String,
+    email:String,
+    age:Number,
+   })
+
+   const studentsModel = mongoose.model('students',schema);
+   const result = await studentsModel.find();
+   console.log(result);
+   
+
+}
+
+dbConnection();
