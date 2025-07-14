@@ -1,17 +1,35 @@
 import mongoose from 'mongoose'
-async function dbConnection(){
-   await mongoose.connect("mongodb://localhost:27017/school");
-   const schema= mongoose.Schema({
-    name:String,
-    email:String,
-    age:Number,
-   })
+import express from 'express'
+import studentModel from './model/studentModel.js';
 
-   const studentsModel = mongoose.model('students',schema);
-   const result = await studentsModel.find();
-   console.log(result);
+const app = express();
+
+
+ await mongoose.connect("mongodb://localhost:27017/school").then(()=>{
+    console.log("_______connected______");
+ })
+
+
+app.get("/",async (req,resp)=>{
+    const studentData= await studentModel
+    resp.send(studentData)
+})
+
+app.listen(3200)
+
+// async function dbConnection(){
+//    await mongoose.connect("mongodb://localhost:27017/school");
+//    const schema= mongoose.Schema({
+//     name:String,
+//     email:String,
+//     age:Number,
+//    })
+
+//    const studentsModel = mongoose.model('students',schema);
+//    const result = await studentsModel.find();
+//    console.log(result);
    
 
-}
+// }
 
-dbConnection();
+// dbConnection();
