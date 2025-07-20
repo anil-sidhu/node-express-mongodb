@@ -1,32 +1,37 @@
 import express from 'express'
+import session from 'express-session';
 
 const app = express();
 
+app.set("view engine", 'ejs')
 
-app.set("view engine",'ejs')
-app.use(express.urlencoded({extended:true}))
-app.get("/login",(req,resp)=>{
-resp.render('login')
+app.use(session({
+    secret:'apple',
+}))
+
+
+app.use(express.urlencoded({ extended: true }))
+
+
+app.get("/login", (req, resp) => {
+    resp.render('login')
 })
 
-
-app.post("/profile",(req,resp)=>{
-    resp.setHeader('Set-Cookie',"login=true")
-    resp.setHeader('Set-Cookie',"name="+req.body.name)
-
-resp.render('profile')
+app.post("/profile",(req,reps)=>{
+    req.session.data= req.body;
+    console.log(req.session.data);
+    
+    reps.render('profile')
 })
 
 app.get("/",(req,resp)=>{
-    let  cookiesData= req.get('cookie');
-
-    cookiesData= cookiesData.split(";")
-
-    cookiesData= cookiesData[1].split("=");
-
-    console.log(cookiesData[1]);
+    const data = req.session.data;
+    console.log("data",data);
     
-resp.render('home',{name:cookiesData[1]})
+    resp.render("home",{data})
 })
+
+
+
 
 app.listen(3200)
