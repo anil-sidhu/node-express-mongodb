@@ -1,20 +1,32 @@
-import { MongoClient } from "mongodb";
+import express from 'express'
 
-const url="mongodb+srv://webanilsidhu:GoogleTest@cluster0.dqwwk5n.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const database="school";
-const collection="student";
-const client= new MongoClient(url);
-client.connect().then(()=>{
-    console.log(".......connect..........");
-    
+const app = express();
+
+
+app.set("view engine",'ejs')
+app.use(express.urlencoded({extended:true}))
+app.get("/login",(req,resp)=>{
+resp.render('login')
 })
 
-async function dbConnection(){
-   const db= client.db(database)
-   const collectResult = db.collection(collection);
-   const result = await collectResult.find().toArray();
-   console.log(result);
-   
-}
 
-dbConnection()
+app.post("/profile",(req,resp)=>{
+    resp.setHeader('Set-Cookie',"login=true")
+    resp.setHeader('Set-Cookie',"name="+req.body.name)
+
+resp.render('profile')
+})
+
+app.get("/",(req,resp)=>{
+    let  cookiesData= req.get('cookie');
+
+    cookiesData= cookiesData.split(";")
+
+    cookiesData= cookiesData[1].split("=");
+
+    console.log(cookiesData[1]);
+    
+resp.render('home',{name:cookiesData[1]})
+})
+
+app.listen(3200)
