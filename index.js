@@ -1,37 +1,44 @@
 import express from 'express'
-import session from 'express-session';
+import nodemailer from 'nodemailer'
 
 const app = express();
 
-app.set("view engine", 'ejs')
 
-app.use(session({
-    secret:'apple',
-}))
+const transporter = nodemailer.createTransport({
+    service:'gmail',
+    auth:{
+        user:'webanilsidhu@gmail.com',
+        pass:'gwos xlen vqid jwqx'
+    }
+});
 
+// app.use(express.urlencoded({extended:false}))
+app.use(express.json())
+app.set('view engine','ejs')
+app.get("/mail",(req,resp)=>{
+    resp.render("mail")
 
-app.use(express.urlencoded({ extended: true }))
-
-
-app.get("/login", (req, resp) => {
-    resp.render('login')
 })
 
-app.post("/profile",(req,reps)=>{
-    req.session.data= req.body;
-    console.log(req.session.data);
+app.post("/submit-email",(req,resp)=>{
+    console.log(req.body);
     
-    reps.render('profile')
-})
-
-app.get("/",(req,resp)=>{
-    const data = req.session.data;
-    console.log("data",data);
+    const mailOptions={
+        from :'webanilsidhu@gmail.com',
+        to:'webanilsidhu@gmail.com',
+        subject:req.body.subject,
+        text:req.body.mail
+    }
+    transporter.sendMail(mailOptions,(error,info)=>{
+        if(error){
+            req.send("email operation failed, try again")
+        }else{
+            resp.send("mail send")
+        }
+    })
     
-    resp.render("home",{data})
+    resp.send("email send")
+
 })
-
-
-
 
 app.listen(3200)
