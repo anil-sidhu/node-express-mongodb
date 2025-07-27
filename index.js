@@ -19,8 +19,13 @@ const connection = async () => {
 
 
 app.use(express.urlencoded({ extended: false }));
-app.get("/", (req, resp) => {
-    resp.render("list")
+app.get("/", async (req, resp) => {
+    const db = await connection();
+    const collection = db.collection(collectionName);
+    const result = await collection.find().toArray();
+    console.log(result);
+    
+    resp.render("list",{result})
 })
 
 app.get("/add", (req, resp) => {
