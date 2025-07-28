@@ -23,7 +23,6 @@ app.get("/", async (req, resp) => {
     const db = await connection();
     const collection = db.collection(collectionName);
     const result = await collection.find().toArray();
-    console.log(result);
     
     resp.render("list",{result})
 })
@@ -60,6 +59,20 @@ app.get("/delete/:id", async (req, resp) => {
         resp.redirect("/")
     } else {
         resp.send("/some error")
+    }
+
+})
+
+app.get("/update/:id", async (req, resp) => {
+    const db = await connection();
+    const collection = db.collection(collectionName);
+    const result = await collection.findOne({_id:new ObjectId(req.params.id)})
+    console.log(result);
+    
+    if (result) {
+        resp.render("update",{result})
+    } else {
+        resp.send("some error")
     }
 
 })
