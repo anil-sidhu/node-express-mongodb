@@ -1,6 +1,7 @@
 import express from 'express'
 import path from 'path'
 import { MongoClient, ObjectId } from 'mongodb';
+import { title } from 'process';
 
 const app = express();
 const publicPath = path.resolve('public')
@@ -71,6 +72,20 @@ app.get("/update/:id", async (req, resp) => {
     
     if (result) {
         resp.render("update",{result})
+    } else {
+        resp.send("some error")
+    }
+
+})
+
+app.post("/update/:id", async (req, resp) => {
+    const db = await connection();
+    const collection = db.collection(collectionName);
+    const filter = {_id:new ObjectId(req.params.id)}
+    const updateData={$set:{title:req.body.title,description:req.body.description}}
+    const result = await collection.updateOne(filter,updateData)
+    if (result) {
+        resp.redirect("/")
     } else {
         resp.send("some error")
     }
