@@ -10,7 +10,9 @@ app.set("view engine", 'ejs')
 
 const dbName = "node-project";
 const collectionName = "todo"
-const url = "mongodb://localhost:27017"
+// const url = "mongodb://localhost:27017"
+
+const url = "mongodb+srv://webanilsidhu:12345@cluster0.dqwwk5n.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 const client = new MongoClient(url)
 
 const connection = async () => {
