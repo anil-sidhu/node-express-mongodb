@@ -2,6 +2,8 @@ import express from 'express'
 import path from 'path'
 import { MongoClient, ObjectId } from 'mongodb';
 import { title } from 'process';
+import serverless from "serverless-http";
+
 
 const app = express();
 const publicPath = path.resolve('public')
@@ -15,9 +17,17 @@ const collectionName = "todo"
 const url = "mongodb+srv://webanilsidhu:12345@cluster0.dqwwk5n.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 const client = new MongoClient(url)
 
+let cachedClient = null;
+let cachedDb = null;
+
 const connection = async () => {
-    const connect = await client.connect();
-    return await connect.db(dbName)
+   if (cachedDb) {
+    return cachedDb;
+  }
+  const client = await MongoClient.connect(url);
+  cachedClient = client;
+  cachedDb = client.db(dbName);
+  return cachedDb;
 }
 
 
@@ -118,4 +128,6 @@ const result = await collection.deleteMany({_id:{$in:selectedTask}})
 })
 
 
-app.listen(3200)
+// app.listen(3300)
+
+export default serverless(app);
